@@ -22,10 +22,12 @@
 
 
 import pytest
-from selenium import webdriver
+from selenium.webdriver import Firefox, FirefoxOptions
 
 @pytest.fixture(scope="session")
 def browser():
-    driver = webdriver.Firefox()
+    firefox_options = FirefoxOptions()
+    firefox_options.add_argument('--headless')
+    driver = Firefox(options=firefox_options)
     yield driver
     driver.quit()

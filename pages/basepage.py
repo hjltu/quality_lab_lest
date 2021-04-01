@@ -21,28 +21,24 @@
 # SOFTWARE.
 
 
-from baseapp import BasePage
-from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
-class MailLocators:
-    #LOCATOR_MAIL_LOGIN = (By.ID, "text")
-    LOCATOR_MAIL_LOGIN_BUTTON = (By.CLASS_NAME, "ph-login")
-    LOCATOR_MAIL_SEARCH_BUTTON = (By.CLASS_NAME, "search2__button")
-    LOCATOR_MAIL_NAVIGATION_BAR = (By.CSS_SELECTOR, ".service__name")
+class BasePage:
 
-class MainPage(BasePage):
+    def __init__(self, driver):
+        self.driver = driver
+        self.base_url = "https://mail.ru/"
 
-    def login(self):
-        login_button = self.find_element(MailLocators.LOCATOR_MAIL_LOGIN_BUTTON)
-        login_button.click()
-        #search_field.send_keys(word)
-        #return search_field
+    def find_element(self, locator,time=33):
+        return WebDriverWait(self.driver,time).until(EC.presence_of_element_located(locator),
+                                        message=f"Can't find element by locator {locator}")
 
-    def click_on_the_search_button(self):
-        return self.find_element(YandexSeacrhLocators.LOCATOR_MAIL_SEARCH_BUTTON,time=2).click()
+    def find_elements(self, locator,time=33):
+        return WebDriverWait(self.driver,time).until(EC.presence_of_all_elements_located(locator),
+                                        message=f"Can't find elements by locator {locator}")
 
-    def check_navigation_bar(self):
-        all_list = self.find_elements(YandexSeacrhLocators.LOCATOR_MAIL_NAVIGATION_BAR,time=2)
-        nav_bar_menu = [x.text for x in all_list if len(x.text) > 0]
-        return nav_bar_menu
+    def go_to_site(self):
+        return self.driver.get(self.base_url)
+
