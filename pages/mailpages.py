@@ -22,8 +22,7 @@
 
 
 """
-dir(By):
-    'CLASS_NAME', 'CSS_SELECTOR', 'ID', 'LINK_TEXT', 'NAME', 'PARTIAL_LINK_TEXT', 'TAG_NAME', 'XPATH'
+https://selenium-python.readthedocs.io/api.html
 """
 
 
@@ -32,43 +31,50 @@ from pages.basepage import BasePage
 from selenium.webdriver.common.by import By
 
 
-LOCATOR_LOGIN_BUTTON = (By.CLASS_NAME, "ph-login")
-LOCATOR_LOGIN_FRAME = (By.CLASS_NAME, "ag-popup__frame__layout__iframe")
-LOCATOR_USERNAME_FIELD = (By.NAME, "username")
-LOCATOR_PASSWORD_BUTTON = (By.CLASS_NAME, "base-1-1-86")
+LOCATOR_USERNAME_FIELD = (By.NAME, "login")
+LOCATOR_PASSWORD_BUTTON = (By.CLASS_NAME, "button")
 LOCATOR_PASSWORD_FIELD = (By.NAME, "password")
-LOCATOR_MAIL_SEARCH_BUTTON = (By.CLASS_NAME, "search2__button")
-LOCATOR_MAIL_NAVIGATION_BAR = (By.CSS_SELECTOR, ".service__name")
+LOCATOR_ENTER_BUTTON = (By.CLASS_NAME, "second-button")
+
+MAIL_PAGE_URL = 'https://e.mail.ru/inbox/'
+LOCATOR_COMPOSE_BUTTON = (By.CLASS_NAME, 'compose-button__txt')
+LOCATOR_RECEIVER_FIELD = (By.XPATH, '//div[@data-type="to"]/div/div/label/div/div/input')
+LOCATOR_MESSAGE_FIELD = (By.CLASS_NAME, 'cke_editable_inline')
+LOCATOR_SEND_BUTTON = (By.CLASS_NAME, 'button2_primary')
 
 
 class MainPage(BasePage):
-
-    def open_login_page(self):
-        print('Open login page')
-        login_button = self.find_element(LOCATOR_LOGIN_BUTTON)
-        login_button.click()
-
-    def switch_to_login_frame(self):
-        self.driver.switch_to.frame(self.find_element(LOCATOR_LOGIN_FRAME))
 
     def logging_in(self, username, password):
         print('Logging')
         username_field = self.find_element(LOCATOR_USERNAME_FIELD)
         username_field.send_keys(username)
-        sleep(3)
+        sleep(1)
         password_button = self.find_element(LOCATOR_PASSWORD_BUTTON)
         password_button.click()
         password_field = self.find_element(LOCATOR_PASSWORD_FIELD)
         password_field.send_keys(password)
-        sleep(3)
-        sign_in_button = self.find_element(LOCATOR_PASSWORD_BUTTON)
+        sleep(1)
+        sign_in_button = self.find_element(LOCATOR_ENTER_BUTTON)
         sign_in_button.click()
-        #return search_field
+        current_url = self.driver.current_url
+        print('current url:', current_url)
+        return True
 
-    def click_on_the_search_button(self):
-        return self.find_element(YandexSeacrhLocators.LOCATOR_MAIL_SEARCH_BUTTON,time=2).click()
 
-    def check_navigation_bar(self):
-        all_list = self.find_elements(YandexSeacrhLocators.LOCATOR_MAIL_NAVIGATION_BAR,time=2)
-        nav_bar_menu = [x.text for x in all_list if len(x.text) > 0]
-        return nav_bar_menu
+class MailPage(BasePage):
+
+    def send_mail(self, receiver, message):
+        self.driver.get(MAIL_PAGE_URL)
+        current_url = self.driver.current_url
+        print('current url:', current_url)
+        compose_button = self.find_element(LOCATOR_COMPOSE_BUTTON)
+        compose_button.click()
+        receiver_field = self.find_element(LOCATOR_RECEIVER_FIELD)
+        receiver_field.send_keys(receiver)
+        message_field = self.find_element(LOCATOR_MESSAGE_FIELD)
+        message_field.send_keys(message)
+        send_button = self.find_element(LOCATOR_SEND_BUTTON)
+        send_button.click()
+        return True
+

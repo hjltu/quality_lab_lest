@@ -28,22 +28,25 @@ Usage:
 
 
 import time
-from pages.mailpages import MainPage
+from pages.mailpages import MainPage, MailPage
 
 
-USERNAME = 'ql_test'
-PASSWORD = '01apr21'
+USERNAME = ''
+PASSWORD = ''
+RECEIVER = ''
+MESSAGE = '{} test message'.format(time.strftime("%d%b%y_%H:%M"))
 
 
-def test_mail_login(browser):
-    print('Start Mail login test')
-    mail_main_page = MainPage(browser)
-    mail_main_page.go_to_site()
-    mail_main_page.open_login_page()
-    mail_main_page.switch_to_login_frame()
-    mail_main_page.logging_in(USERNAME, PASSWORD)
-    time.sleep(99)
-    #mail_main_page.enter_word("Hello")
-    #mail_main_page.click_on_the_search_button()
-    #elements = yandex_main_page.check_navigation_bar()
-    #assert "Картинки" and "Видео" in elements
+def test_send_mail(browser):
+
+    print('Start Test.Login')
+    main_page = MainPage(browser)
+    main_page.go_to_site()
+    res = main_page.logging_in(USERNAME, PASSWORD)
+    assert res is True, 'Can\'t login'
+
+    print('Send Mail')
+    mail_page = MailPage(browser)
+    res = mail_page.send_mail(RECEIVER, MESSAGE)
+    assert res is True, 'Can\'t send email'
+    print('End test.Success')

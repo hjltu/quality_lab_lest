@@ -31,14 +31,13 @@ class BasePage:
         self.driver = driver
         self.base_url = "https://mail.ru/"
 
-    def find_element(self, locator,time=33):
+    def find_element(self, locator,time=99):
         return WebDriverWait(self.driver,time).until(EC.presence_of_element_located(locator),
                                         message=f"Can't find element by locator {locator}")
 
-    def find_elements(self, locator,time=33):
+    def find_elements(self, locator,time=99):
         return WebDriverWait(self.driver,time).until(EC.presence_of_all_elements_located(locator),
                                         message=f"Can't find elements by locator {locator}")
 
     def go_to_site(self):
         return self.driver.get(self.base_url)
-
